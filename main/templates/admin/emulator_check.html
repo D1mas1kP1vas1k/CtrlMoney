@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Проверка данных эмулятора — Админ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: Inter, system-ui, sans-serif; background:#f6f8fb; color:#111827; padding:20px }
+        .card { background:white; border-radius:8px; padding:20px; box-shadow:0 6px 18px rgba(0,0,0,0.06); max-width:900px }
+        .btn { background:#2563eb; color:white; padding:10px 14px; border-radius:6px; border:none; cursor:pointer }
+        .raw { color:#b91c1c; font-weight:700 }
+        .ok { color:#16a34a; font-weight:700 }
+        .bad { color:#dc2626 }
+        pre { background:#f3f4f6; padding:10px; border-radius:6px; overflow:auto }
+        ul.reasons { margin-top:8px }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1 style="margin:0 0 8px">Проверка данных эмулятора</h1>
+        <p style="margin:0 0 16px">Нажмите кнопку, чтобы получить «сырое» ФИО от внешнего эмулятора и выполнить жёсткую валидацию (без предварительной обработки).</p>
+
+        <div style="margin-bottom:12px">
+            <button id="checkBtn" class="btn"><i class="fas fa-microchip"></i> Проверить данные эмулятора</button>
+        </div>
+
+        <div id="resultArea" style="display:none; margin-top:12px">
+            <h3>Результат проверки</h3>
+            <p>Оригинальные данные (переданы <strong>как есть</strong>): <span id="rawFio" class="raw">"..."</span></p>
+            <p id="validLine"></p>
+            <div id="reasonsBlock"></div>
+            <p style="margin-top:8px; font-size:13px; color:#374151"><em>Отчёт сформирован без какой-либо предварительной обработки данных.</em></p>
+        </div>
+    </div>
+
+    <script>
+    function getCookie(name) {
+        let v = document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)');
+        return v ? v.pop() : '';
+    }
+
+    document.getElementById('checkBtn').addEventListener('click', async function(){
+        const btn = this;
+        btn.disabled = true;
+        btn.textContent = 'Проверяем...';
+        const resArea = document.getElementById('resultArea');
+        const rawFioEl = document.getElementById('rawFio');
+        const validLine = document.getElementById('validLine');
+        const reasonsBlock = document.getElementById('reasonsBlock');
+        resArea.style.display = 'none';
+        reasonsBlock.innerHTML = '';
+
+        try {
+            const resp = await fetch('/admin/emulator-check/ajax/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                credentials: 'same-origin'
+            });
+
+            if (!resp.ok) {
+                const t = await resp.json().catch(()=>({error: 'Ошибка'}));
+                validLine.innerHTML = '<span class="bad">Ошибка: ' + (t.error||resp.status) + '</span>';
+                resArea.style.display = '';
+                return;
+            }
+
+            const data = await resp.json();
+            resArea.style.display = '';
+            rawFioEl.textContent = '"' + data.raw_fio + '"';
+
+            if (data.is_valid) {
+                validLine.innerHTML = '<span class="ok">Валидация пройдена</span>';
+            } else {
+                validLine.innerHTML = '<span class="bad">Валидация не пройдена</span>';
+                if (data.reasons && data.reasons.length) {
+                    const ul = document.createElement('ul'); ul.className = 'reasons';
+                    data.reasons.forEach(r => {
+                        const li = document.createElement('li'); li.textContent = r; ul.appendChild(li);
+                    });
+                    reasonsBlock.innerHTML = '<strong>Причины:</strong>';
+                    reasonsBlock.appendChild(ul);
+                }
+            }
+
+            const note = document.createElement('div'); note.style.marginTop='8px'; note.style.color='#374151'; note.innerHTML = '<em>' + (data.note || '') + '</em>';
+            reasonsBlock.appendChild(note);
+
+        } catch (e) {
+            validLine.innerHTML = '<span class="bad">Ошибка: ' + e.message + '</span>';
+            resArea.style.display = '';
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-microchip"></i> Проверить данные эмулятора';
+        }
+    });
+    </script>
+</body>
+</html>

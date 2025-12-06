@@ -1,0 +1,113 @@
+{
+  "accounts": [
+    {
+      "name": "Дебетовый счет",
+      "amount": "50000",
+      "account_type": "debit",
+      "description": "Основной дебетовый счет"
+    },
+    {
+      "name": "Накопительный счет",
+      "amount": "100000",
+      "account_type": "savings",
+      "description": "Счет для накопления средств"
+    },
+    {
+      "name": "Наличные",
+      "amount": "5000",
+      "account_type": "cash",
+      "description": "Наличные деньги"
+    }
+  ],
+  "transactions": [
+    {
+      "name": "Зарплата",
+      "amount": "150000",
+      "transaction_type": "income",
+      "category": "доход",
+      "date": "2024-12-01T09:00:00",
+      "account_id": 1
+    },
+    {
+      "name": "Продукты в магазине",
+      "amount": "2500",
+      "transaction_type": "expense",
+      "category": "еда",
+      "date": "2024-12-02T14:30:00",
+      "account_id": 1
+    },
+    {
+      "name": "Проезд на автобусе",
+      "amount": "120",
+      "transaction_type": "expense",
+      "category": "транспорт",
+      "date": "2024-12-02T08:15:00",
+      "account_id": 3
+    },
+    {
+      "name": "Оплата квартиры",
+      "amount": "35000",
+      "transaction_type": "expense",
+      "category": "жилье",
+      "date": "2024-12-01T10:00:00",
+      "account_id": 1
+    },
+    {
+      "name": "Фитнес-клуб",
+      "amount": "1500",
+      "transaction_type": "expense",
+      "category": "здоровье",
+      "date": "2024-12-03T16:00:00",
+      "account_id": 1
+    }
+  ],
+  "goals": [
+    {
+      "name": "Отпуск в Турцию",
+      "target_amount": "500000",
+      "current_amount": "150000"
+    },
+    {
+      "name": "Новый ноутбук",
+      "target_amount": "150000",
+      "current_amount": "75000"
+    },
+    {
+      "name": "Аварийный фонд",
+      "target_amount": "300000",
+      "current_amount": "200000"
+    }
+  ],
+  "budget_categories": [
+    {
+      "name": "еда",
+      "budget": "10000",
+      "emoji": "🍔"
+    },
+    {
+      "name": "транспорт",
+      "budget": "5000",
+      "emoji": "🚌"
+    },
+    {
+      "name": "развлечения",
+      "budget": "8000",
+      "emoji": "🎬"
+    },
+    {
+      "name": "жилье",
+      "budget": "40000",
+      "emoji": "🏠"
+    },
+    {
+      "name": "здоровье",
+      "budget": "5000",
+      "emoji": "💪"
+    },
+    {
+      "name": "одежда",
+      "budget": "10000",
+      "emoji": "👕"
+    }
+  ]
+}

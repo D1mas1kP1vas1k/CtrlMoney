@@ -1,0 +1,503 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}Панель администратора - CtrlMoney{% endblock %}
+
+{% block extrastyle %}
+<style>
+    body {
+        background-color: #f5f5f5;
+    }
+    
+    .dashboard-container {
+        padding: 20px;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    .welcome-section {
+        background: linear-gradient(135deg, #417690 0%, #205067 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .welcome-section h2 {
+        font-size: 28px;
+        margin: 0 0 10px 0;
+    }
+    
+    .welcome-section p {
+        margin: 5px 0;
+        opacity: 0.95;
+    }
+    
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .dashboard-card {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        border-left: 5px solid #417690;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .dashboard-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    
+    .dashboard-card h3 {
+        margin-top: 0;
+        color: #417690;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .dashboard-card .icon {
+        font-size: 24px;
+    }
+    
+    .dashboard-card p {
+        margin: 10px 0;
+        color: #666;
+        line-height: 1.6;
+    }
+    
+    .dashboard-card a {
+        display: inline-block;
+        margin-top: 15px;
+        padding: 10px 20px;
+        background-color: #417690;
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+        font-weight: bold;
+    }
+    
+    .dashboard-card a:hover {
+        background-color: #205067;
+    }
+    
+    .sql-console-section {
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .sql-console-section h3 {
+        margin-top: 0;
+        color: #417690;
+        font-size: 20px;
+        border-bottom: 2px solid #417690;
+        padding-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .sql-form-group {
+        margin-bottom: 20px;
+    }
+    
+    .sql-form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+        color: #333;
+        font-size: 14px;
+    }
+    
+    .sql-form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 13px;
+        resize: vertical;
+        box-sizing: border-box;
+        min-height: 120px;
+    }
+    
+    .sql-form-group textarea:focus {
+        border-color: #417690;
+        outline: none;
+        box-shadow: 0 0 5px rgba(65, 118, 144, 0.3);
+    }
+    
+    .sql-buttons {
+        display: flex;
+        gap: 10px;
+        margin-top: 15px;
+        flex-wrap: wrap;
+    }
+    
+    .sql-buttons button {
+        padding: 10px 20px;
+        font-size: 14px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-weight: bold;
+    }
+    
+    .submit-btn {
+        background-color: #417690;
+        color: white;
+    }
+    
+    .submit-btn:hover {
+        background-color: #205067;
+    }
+    
+    .clear-btn {
+        background-color: #999;
+        color: white;
+    }
+    
+    .clear-btn:hover {
+        background-color: #666;
+    }
+    
+    .info-box {
+        background-color: #e7f3ff;
+        border-left: 4px solid #0099ff;
+        padding: 12px 15px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        color: #004085;
+        font-size: 13px;
+    }
+    
+    .warning-box {
+        background-color: #fff3cd;
+        border: 1px solid #ffc107;
+        border-radius: 4px;
+        padding: 12px 15px;
+        margin-bottom: 15px;
+        color: #856404;
+    }
+    
+    .error-box {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 4px;
+        padding: 12px 15px;
+        margin-bottom: 15px;
+        color: #721c24;
+    }
+    
+    .success-box {
+        background-color: #d4edda;
+        border: 1px solid #c3e6cb;
+        border-radius: 4px;
+        padding: 12px 15px;
+        margin-bottom: 15px;
+        color: #155724;
+    }
+    
+    .results-container {
+        margin-top: 20px;
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 4px;
+        border: 1px solid #ddd;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .results-header {
+        font-weight: bold;
+        font-size: 14px;
+        margin-bottom: 10px;
+        color: #333;
+    }
+    
+    .results-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        font-size: 12px;
+    }
+    
+    .results-table th {
+        background-color: #417690;
+        color: white;
+        padding: 8px;
+        text-align: left;
+        font-weight: bold;
+        border: 1px solid #ddd;
+    }
+    
+    .results-table td {
+        padding: 6px 8px;
+        border: 1px solid #ddd;
+        word-break: break-word;
+    }
+    
+    .results-table tr:nth-child(even) {
+        background-color: #f5f5f5;
+    }
+    
+    .row-count {
+        margin-top: 10px;
+        padding: 8px 12px;
+        background-color: #e7f3ff;
+        border-radius: 4px;
+        color: #004085;
+        font-weight: bold;
+        font-size: 13px;
+    }
+    
+    .quick-links {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 10px;
+        margin-top: 15px;
+    }
+    
+    .quick-link {
+        display: inline-block;
+        padding: 10px 15px;
+        background-color: #f0f0f0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-decoration: none;
+        color: #417690;
+        font-size: 13px;
+        font-weight: bold;
+        text-align: center;
+        transition: all 0.3s;
+    }
+    
+    .quick-link:hover {
+        background-color: #e0e0e0;
+        border-color: #417690;
+        color: #205067;
+    }
+    
+    .stats-row {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .stat-box {
+        background: linear-gradient(135deg, #417690 0%, #205067 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 8px;
+        text-align: center;
+    }
+    
+    .stat-value {
+        font-size: 28px;
+        font-weight: bold;
+        margin: 10px 0;
+    }
+    
+    .stat-label {
+        font-size: 13px;
+        opacity: 0.9;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <!-- Welcome Section -->
+    <div class="welcome-section">
+        <h2>👋 Добро пожаловать в панель администратора CtrlMoney</h2>
+        <p><strong>Администратор:</strong> {{ user.username }}</p>
+        <p>Управляй данными приложения и выполняй SQL запросы к базе данных.</p>
+    </div>
+    
+    <!-- Statistics -->
+    {% if stats %}
+    <div class="stats-row">
+        <div class="stat-box">
+            <div class="stat-label">👥 Пользователей</div>
+            <div class="stat-value">{{ stats.users_count }}</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">💳 Счетов</div>
+            <div class="stat-value">{{ stats.accounts_count }}</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">📊 Транзакций</div>
+            <div class="stat-value">{{ stats.transactions_count }}</div>
+        </div>
+        <div class="stat-box">
+            <div class="stat-label">🎯 Целей</div>
+            <div class="stat-value">{{ stats.goals_count }}</div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <!-- Quick Links -->
+    <div class="dashboard-grid">
+        <div class="dashboard-card">
+            <h3><span class="icon">👥</span>Пользователи</h3>
+            <p>Управляй пользователями приложения: просматривай, редактируй профили и разрешения.</p>
+            <a href="/admin/auth/user/">Перейти →</a>
+        </div>
+        
+        <div class="dashboard-card">
+            <h3><span class="icon">💳</span>Счета</h3>
+            <p>Добавляй, редактируй и управляй финансовыми счетами пользователей.</p>
+            <a href="/admin/main/account/">Перейти →</a>
+        </div>
+        
+        <div class="dashboard-card">
+            <h3><span class="icon">📊</span>Транзакции</h3>
+            <p>Просматривай и редактируй все финансовые транзакции в системе.</p>
+            <a href="/admin/main/transaction/">Перейти →</a>
+        </div>
+        
+        <div class="dashboard-card">
+            <h3><span class="icon">🎯</span>Финансовые цели</h3>
+            <p>Управляй финансовыми целями пользователей и отслеживай их прогресс.</p>
+            <a href="/admin/main/goal/">Перейти →</a>
+        </div>
+        
+        <div class="dashboard-card">
+            <h3><span class="icon">📋</span>Бюджеты</h3>
+            <p>Просматривай и редактируй бюджеты по категориям для пользователей.</p>
+            <a href="/admin/main/budgetcategory/">Перейти →</a>
+        </div>
+        
+        <div class="dashboard-card">
+            <h3><span class="icon">⚙️</span>Настройки</h3>
+            <p>Меняй основные настройки приложения и параметры системы.</p>
+            <a href="/admin/">Все настройки →</a>
+        </div>
+
+        <div class="dashboard-card">
+            <h3><span class="icon">💾</span>Бэкапирование</h3>
+            <p>Создавай SQL бэкапы базы данных для резервного копирования и восстановления.</p>
+            <a href="/admin/backup/">Перейти →</a>
+        </div>
+    </div>
+    
+    <!-- SQL Console -->
+    <div class="sql-console-section">
+        <h3>🔧 SQL Консоль</h3>
+        
+        <div class="info-box">
+            ℹ️ <strong>Информация:</strong> Введи SQL запрос для выполнения. Доступны операции SELECT, UPDATE, DELETE и INSERT.
+        </div>
+        
+        <div class="warning-box">
+            ⚠️ <strong>Внимание!</strong> Будь осторожен при выполнении команд UPDATE, DELETE и INSERT, так как они изменяют данные в базе!
+        </div>
+        
+        <form method="post" class="sql-form">
+            {% csrf_token %}
+            
+            <div class="sql-form-group">
+                <label for="query">SQL Запрос:</label>
+                <textarea 
+                    id="query" 
+                    name="query" 
+                    placeholder="Примеры:&#10;SELECT * FROM main_account;&#10;UPDATE main_account SET amount = 1000 WHERE id = 1;&#10;DELETE FROM main_transaction WHERE id = 1;"></textarea>
+            </div>
+            
+            <div class="sql-buttons">
+                <button type="submit" class="submit-btn">▶️ Выполнить запрос</button>
+                <button type="button" class="clear-btn" onclick="document.getElementById('query').value = ''; document.getElementById('query').focus();">⟲ Очистить</button>
+            </div>
+            
+            <div class="quick-links">
+                <a href="#" class="quick-link" onclick="setQuery('SELECT * FROM main_account;'); return false;">Все счета</a>
+                <a href="#" class="quick-link" onclick="setQuery('SELECT * FROM main_transaction ORDER BY date DESC LIMIT 50;'); return false;">Последние транзакции</a>
+                <a href="#" class="quick-link" onclick="setQuery('SELECT * FROM main_goal;'); return false;">Все цели</a>
+                <a href="#" class="quick-link" onclick="setQuery('SELECT COUNT(*) FROM auth_user;'); return false;">Кол-во пользователей</a>
+            </div>
+        </form>
+        
+        <!-- Results -->
+        {% if error %}
+            <div class="error-box" style="margin-top: 20px;">
+                <strong>❌ Ошибка:</strong> {{ error }}
+            </div>
+        {% endif %}
+        
+        {% if results %}
+            <div class="results-container">
+                {% if results.type == 'select' %}
+                    <div class="results-header">
+                        📊 Результаты запроса ({{ results.row_count }} строк)
+                    </div>
+                    
+                    {% if results.rows %}
+                        <table class="results-table">
+                            <thead>
+                                <tr>
+                                    {% for column in results.columns %}
+                                        <th>{{ column }}</th>
+                                    {% endfor %}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for row in results.rows %}
+                                    <tr>
+                                        {% for value in row %}
+                                            <td>
+                                                {% if value is None %}
+                                                    <em style="color: #999;">NULL</em>
+                                                {% elif value|length > 50 %}
+                                                    {{ value|truncatewords:10 }}
+                                                {% else %}
+                                                    {{ value }}
+                                                {% endif %}
+                                            </td>
+                                        {% endfor %}
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="info-box">
+                            ℹ️ Запрос выполнен успешно, но результатов не найдено.
+                        </div>
+                    {% endif %}
+                
+                {% else %}
+                    <div class="success-box">
+                        ✅ <strong>{{ results.message }}</strong>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function setQuery(query) {
+        document.getElementById('query').value = query;
+        document.getElementById('query').focus();
+    }
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const textarea = document.getElementById('query');
+        if (textarea) {
+            textarea.focus();
+        }
+    });
+</script>
+{% endblock %}

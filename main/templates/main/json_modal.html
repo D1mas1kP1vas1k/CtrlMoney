@@ -1,0 +1,264 @@
+<!-- JSON Import/Export Modal -->
+<div id="jsonModal" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 600px;">
+        <span class="close" onclick="closeJsonModal()">&times;</span>
+        <h2>Импорт и экспорт данных</h2>
+        
+        <div style="margin: 20px 0;">
+            <h3>📥 Импорт JSON файла</h3>
+            <p style="color: #666; font-size: 14px;">
+                Загрузите JSON файл со своими финансовыми данными (счета, транзакции, цели, категории бюджета).
+            </p>
+            <div style="margin: 15px 0;">
+                <input type="file" id="jsonFileInput" accept=".json" style="padding: 8px;">
+                <button onclick="importJsonFile()" style="padding: 8px 15px; background-color: #417690; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                    📤 Загрузить
+                </button>
+            </div>
+            <div id="importResult" style="display: none; padding: 10px; border-radius: 4px; margin-top: 10px;"></div>
+        </div>
+        
+        <hr style="border: none; border-top: 1px solid #ddd; margin: 20px 0;">
+        
+        <div style="margin: 20px 0;">
+            <h3>📤 Экспорт в JSON файл</h3>
+            <p style="color: #666; font-size: 14px;">
+                Скачайте все ваши финансовые данные в формате JSON для резервного копирования.
+            </p>
+            <button onclick="exportJsonFile()" style="padding: 8px 15px; background-color: #417690; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                📥 Скачать JSON
+            </button>
+        </div>
+        
+        <div style="background-color: #f5f5f5; padding: 10px; border-radius: 4px; margin-top: 20px; font-size: 12px;">
+            <p><strong>Структура JSON файла:</strong></p>
+            <pre style="margin: 5px 0; overflow-x: auto; font-size: 11px;">
+{
+  "accounts": [
+    {"name": "Счет 1", "amount": 1000, "account_type": "debit"}
+  ],
+  "transactions": [
+    {"name": "Покупка", "amount": 100, "transaction_type": "expense", "category": "еда"}
+  ],
+  "goals": [
+    {"name": "Цель 1", "target_amount": 50000, "current_amount": 10000}
+  ],
+  "budget_categories": [
+    {"name": "еда", "budget": 5000, "emoji": "🍔"}
+  ]
+}</pre>
+        </div>
+    </div>
+</div>
+
+<style>
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 8px;
+    max-width: 500px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #417690;
+    padding-bottom: 10px;
+}
+
+.modal-content h3 {
+    margin: 15px 0 10px 0;
+    color: #333;
+    font-size: 16px;
+}
+
+.modal-content hr {
+    margin: 20px 0;
+    border: none;
+    border-top: 1px solid #ddd;
+}
+</style>
+
+<script>
+function openJsonModal() {
+    document.getElementById('jsonModal').style.display = 'block';
+}
+
+function closeJsonModal() {
+    document.getElementById('jsonModal').style.display = 'none';
+    document.getElementById('importResult').style.display = 'none';
+}
+
+function importJsonFile() {
+    const fileInput = document.getElementById('jsonFileInput');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        alert('Пожалуйста, выберите JSON файл');
+        return;
+    }
+    
+    if (!file.name.endsWith('.json')) {
+        alert('Пожалуйста, выберите файл с расширением .json');
+        return;
+    }
+    
+    const formData = new FormData();
+    formData.append('json_file', file);
+    
+    const resultDiv = document.getElementById('importResult');
+    resultDiv.style.display = 'block';
+    resultDiv.innerHTML = '<p style="color: #417690;">⏳ Загрузка файла...</p>';
+    
+    fetch('/api/import-json/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': getCookie('csrftoken')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            let html = '<div style="background-color: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 10px; border-radius: 4px;">';
+            html += '<p><strong>✅ Данные успешно загружены!</strong></p>';
+            html += '<ul style="margin: 5px 0; padding-left: 20px;">';
+            
+            if (data.results.accounts.created > 0) {
+                html += `<li>Счетов добавлено: ${data.results.accounts.created}</li>`;
+            }
+            if (data.results.transactions.created > 0) {
+                html += `<li>Транзакций добавлено: ${data.results.transactions.created}</li>`;
+            }
+            if (data.results.goals.created > 0) {
+                html += `<li>Целей добавлено: ${data.results.goals.created}</li>`;
+            }
+            if (data.results.budget_categories.created > 0) {
+                html += `<li>Категорий бюджета добавлено: ${data.results.budget_categories.created}</li>`;
+            }
+            
+            html += '</ul>';
+            
+            // Показать ошибки если они есть
+            let hasErrors = false;
+            if (data.results.accounts.errors.length > 0) {
+                hasErrors = true;
+                html += '<p><strong>Ошибки при импорте счетов:</strong></p><ul style="padding-left: 20px;">';
+                data.results.accounts.errors.forEach(err => {
+                    html += `<li style="color: #721c24;">${err}</li>`;
+                });
+                html += '</ul>';
+            }
+            if (data.results.transactions.errors.length > 0) {
+                hasErrors = true;
+                html += '<p><strong>Ошибки при импорте транзакций:</strong></p><ul style="padding-left: 20px;">';
+                data.results.transactions.errors.forEach(err => {
+                    html += `<li style="color: #721c24;">${err}</li>`;
+                });
+                html += '</ul>';
+            }
+            if (data.results.goals.errors.length > 0) {
+                hasErrors = true;
+                html += '<p><strong>Ошибки при импорте целей:</strong></p><ul style="padding-left: 20px;">';
+                data.results.goals.errors.forEach(err => {
+                    html += `<li style="color: #721c24;">${err}</li>`;
+                });
+                html += '</ul>';
+            }
+            if (data.results.budget_categories.errors.length > 0) {
+                hasErrors = true;
+                html += '<p><strong>Ошибки при импорте категорий бюджета:</strong></p><ul style="padding-left: 20px;">';
+                data.results.budget_categories.errors.forEach(err => {
+                    html += `<li style="color: #721c24;">${err}</li>`;
+                });
+                html += '</ul>';
+            }
+            
+            html += '</div>';
+            resultDiv.innerHTML = html;
+            fileInput.value = '';
+        } else {
+            resultDiv.innerHTML = `<div style="background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 10px; border-radius: 4px;">
+                <p><strong>❌ Ошибка загрузки:</strong></p>
+                <p>${data.error}</p>
+            </div>`;
+        }
+    })
+    .catch(error => {
+        resultDiv.innerHTML = `<div style="background-color: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 10px; border-radius: 4px;">
+            <p><strong>❌ Ошибка:</strong></p>
+            <p>${error.message}</p>
+        </div>`;
+    });
+}
+
+function exportJsonFile() {
+    const now = new Date();
+    const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, -5);
+    
+    fetch('/api/export-json/')
+        .then(response => {
+            if (!response.ok) throw new Error('Ошибка экспорта');
+            return response.json();
+        })
+        .then(data => {
+            const jsonString = JSON.stringify(data, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json; charset=utf-8' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `ctrlmoney_export_${timestamp}.json`;
+            link.click();
+        })
+        .catch(error => {
+            alert('Ошибка при экспорте: ' + error.message);
+        });
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Закрыть модаль при клике вне её
+window.onclick = function(event) {
+    const modal = document.getElementById('jsonModal');
+    if (event.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+</script>

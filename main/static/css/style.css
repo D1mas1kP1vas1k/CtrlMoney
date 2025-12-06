@@ -1,0 +1,1797 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
+* {
+    margin: 0;
+    box-sizing: border-box;
+    padding: 0;
+}
+
+:root {
+    --index: calc(1vw + 1vh);
+    --primary-color: #FF5858;
+    --success-color: #10B981;
+    --danger-color: #EF4444;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --hover-shadow: rgba(0, 0, 0, 0.2);
+    --border-color: #E5E7EB;
+    --transition-time: 0.2s;
+    /* MoneyWise gradient colors */
+    --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    --gradient-purple-pink: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --accent-purple: #667eea;
+    --accent-dark-purple: #764ba2;
+    --accent-pink: #f093fb;
+}
+
+button {
+    all: unset;
+}
+
+a {
+    all: unset;
+}
+
+a:hover {
+    color: #000;
+}
+
+a:visited {
+    color: #000;
+}
+
+a:active {
+    color: #000;
+}
+
+body{
+    display: flex;
+    background-color: rgb(202, 202, 202);
+    align-items: flex-start;
+    font-family: "Inter", Arial, Helvetica, sans-serif;
+    background-size: cover;
+    font-size: calc(var(--index) * 0.53);
+}
+
+/*Переключатели*/
+.statistics-toggle{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: calc(var(--index) * 0.53);
+    font-weight: 500;
+    text-align: center;
+    margin-left: 2%;
+    text-align: center;
+}
+
+.toggle-icon {
+    width: calc(var(--index) * 1.07);
+    height: calc(var(--index) * 1.07);
+    display: block;
+}
+
+.toggle-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+
+.toggle-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 10% calc(var(--index) * 0.53);
+    cursor: pointer;
+    border-radius: calc(var(--index) * 0.53);
+    transition: all .25s ease-in-out;
+}
+
+.toggle-option:hover {
+    transform: translateY(calc(var(--index) * -0.07));
+    background-color: #EAEAEA;
+}
+
+
+.toggle-option:first-child {
+    margin-top: calc(var(--index) * 0.67);
+}
+
+.toggle-option:last-child {
+    margin-bottom: 25%;
+}
+
+
+.main-wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: calc(var(--index) * 0.53);
+    padding: calc(var(--index) * 0.4) 0 0 calc(var(--index) * 2);
+    position: relative;
+    z-index: 1;
+}
+
+/*Общие*/
+.menu-card{
+    display: flex;
+    align-items: left;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: calc(var(--index) * 0.53);
+    padding: calc(var(--index) * 0.67);
+    font-weight: 500;
+}
+
+.menu-capital{
+    display: flex;
+    align-items: left;
+    justify-content: center;
+    flex-direction: column;
+    
+}
+
+.menu-capital p{
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.menu-capital h2 {
+    font-size: calc(var(--index)*1.5);
+    font-weight: 500;
+    margin-top: calc(var(--index) * 0.27);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    transition: font-size 0.3s ease;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.menu-capital h2 span {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/*Кнопки*/
+.menu-btns {
+    margin: calc(var(--index) * 0.53) 0;
+    display: flex;
+    gap: calc(var(--index) * 0.5);
+    justify-content: center;
+    align-items: flex-start;
+
+}
+
+.menu-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    text-align: center;
+    margin-right: calc(var(--index) * 0.27);
+    transition: transform .25s ease-in-out;
+}
+
+
+.menu-btn:hover {
+    transform: translateY(calc(var(--index) * -0.07));
+}
+
+.menu-btn-actions {
+    margin-right: 0;
+}
+
+.menu-img {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(255, 255, 255); 
+    width: calc(var(--index) * 2.13);
+    height: calc(var(--index) * 2.13);
+    border: calc(var(--index) * 0.03) solid rgba(0, 0, 0, .1); 
+    border-radius: calc(var(--index) * 0.53);
+    margin-bottom: calc(var(--index) * 0.27);
+    transition: background-color .25s ease-in-out;
+}
+
+.menu-img svg, .menu-img img {
+    width: 60%;
+    height: 60%;
+    object-fit: contain;
+}
+
+.menu-img:hover {
+    background-color: #ffc9c9;
+}
+
+.menu-btn p {
+    margin: 0;
+    font-size: calc(var(--index) * 0.47);
+    font-weight: 400;
+    max-width: calc(var(--index) * 2.13);
+    line-height: 1.2;
+    color: black;
+
+}
+
+/*Модалка*/
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, .5);
+    z-index: 1000;
+}
+
+.modal[style*="display: block"] {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: #fff;
+    padding: calc(var(--index) * 1);
+    width: calc(var(--index) * 15);
+    border-radius: calc(var(--index) * 0.5);
+    position: relative;
+    z-index: 1001;
+    transform: translateY(0);
+    margin: 0;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content button {
+    width: 100%;
+    margin-bottom: calc(var(--index) * 0.5);
+    padding: calc(var(--index) * 0.4);
+    border: calc(var(--index) * .1) solid rgba(0, 0, 0, 0.1);
+    border-radius: calc(var(--index) * 0.27);
+    font-size: calc(var(--index) * 0.6);
+}
+
+.modal-content button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+
+.modal-content button:hover {
+    opacity: 0.9;
+}
+
+.close {
+    position: absolute;
+    right: calc(var(--index) * 0.8);
+    top: calc(var(--index) * 0.8);
+    cursor: pointer;
+    font-size: calc(var(--index) * 1);
+    color: rgba(0, 0, 0, 0.5);
+    transition: color 0.3s ease;
+}
+
+.close:hover {
+    color: var(--primary-color);
+}
+
+/*Счета*/
+
+.menu-accounts-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.menu-accounts-header h2 {
+    margin: 0 0 0 calc(var(--index) * 0.27);
+    font-weight: 400;
+}
+
+.menu-accounts-img {
+    width: calc(var(--index) * 1.07);
+    height: calc(var(--index) * 1.07);
+    background-color: #fff;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.menu-account-circle {
+    width: calc(var(--index) * 1.4);
+    height: calc(var(--index) * 1.4);
+    background-color: #EAEAEA;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    margin: calc(var(--index) * 0.27);
+}
+
+.menu-account-img svg {
+    display: block;
+    width: 60%;
+    height: auto;
+    margin: auto;
+    transform: translateY(2%);
+    object-fit: contain;
+}
+
+/* Отключаем hover для состояния, когда нет счетов */
+.menu-account.no-accounts {
+    cursor: default;
+    transform: none;
+    background-color: transparent;
+}
+.menu-account.no-accounts:hover {
+    transform: none;
+    background-color: transparent;
+}
+
+/* Если нет счетов — не показываем hover и не делаем элемент кликабельным */
+.menu-account.no-accounts {
+    cursor: default;
+    border: none;
+    transform: none;
+}
+
+.menu-account.no-accounts .menu-account-circle,
+.menu-account.no-accounts .menu-account-info {
+    opacity: 0.85;
+}
+
+.menu-account-info {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    min-width: 0;
+    flex: 1;
+}
+
+.account-amount {
+    margin-right: calc(var(--index) * 0.53);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    transition: font-size 0.3s ease;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    flex-shrink: 1;
+}
+
+.menu-accounts-list {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(var(--index) * 8.5); /* ~4 элемента */
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: calc(var(--index) *.5); /* небольшой отступ для скроллбара */
+}
+
+.menu-add-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(var(--index) * 11.33);
+    height: calc(var(--index) * 2);
+    background-color: #fff;
+    color: var(--primary-color);
+    border: calc(var(--index) * 0.03) solid var(--primary-color);
+    border-radius: calc(var(--index) * 0.53);
+    margin-top: calc(var(--index) * 0.53);
+    cursor: pointer;
+    transition: all .3s ease-in-out;
+}
+
+.menu-add-btn:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+    transform: translateY(calc(var(--index) * -0.07));
+}
+
+.menu-block {
+    display: flex;
+    flex-direction: column;
+    width: calc(var(--index) * 12.33);
+}
+
+
+
+/* Экономия */
+.economy {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: calc(var(--index) * 0.53);
+    padding: calc(var(--index) * 0.53);
+    width: calc(var(--index) * 12.33);
+    margin-top: calc(var(--index) * 0.53);
+}
+
+.economy .period {
+    justify-content: flex-start;
+    border-bottom: none;
+    margin-bottom: calc(var(--index) * 0.53);
+}
+
+.economy-row {
+    display: flex;
+    gap: calc(var(--index) * 0.53);
+}
+
+.income,
+.expenses {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: calc(var(--index) * 0.4);
+    padding: calc(var(--index) * 0.27) calc(var(--index) * 0.4);
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: calc(var(--index) * 0.27);
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+    flex: 1;
+    min-width: 0;
+}
+
+.income-row, .expenses-row {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--index) * 0.27);
+    overflow: hidden;
+    min-width: 0;
+    flex: 1;
+}
+
+.income p,
+.expenses p {
+    color: #666;
+    font-size: calc(var(--index) * 0.43);
+}
+
+.income h2,
+.expenses h2 {
+    font-size: calc(var(--index) * 0.8);
+    font-weight: 500;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    transition: font-size 0.3s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    line-height: 1.2;
+}
+
+.income h2 span,
+.expenses h2 span {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.income-img,
+.expenses-img {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: calc(var(--index) * 0.4) calc(var(--index) * 0.13);
+    flex-shrink: 0;
+    min-width: calc(var(--index) * 1);
+}
+
+.income-img svg, .expenses-img svg {
+    width: calc(var(--index) * 0.8);
+    height: calc(var(--index) * 0.8);
+}
+
+.economy-statistic {
+    padding: calc(var(--index) * 0.5);
+    background-color: rgba(255, 255, 255, 0.85);
+    border-radius: calc(var(--index) * 0.27);
+    overflow: hidden;
+    width: 100%;
+    max-width: 100%;
+}
+
+
+.economy-chart {
+    background-color: #EFEFEF;
+    width: calc(var(--index) * 9.5);
+    height: calc(var(--index) * 0.67);
+    border-radius: calc(var(--index) * 0.27);
+    position: relative;
+    cursor: pointer;
+}
+
+.economy-chart canvas {
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: calc(var(--index) * 0.53);
+}
+
+.economy-chart-wrapper {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--index) * 0.27);
+    position: relative;
+}
+
+#progressText {
+    font-weight: 500;
+    font-size: calc(var(--index) * 0.47);
+    color: #FF5858;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.economy-chart-wrapper:hover #progressText {
+    opacity: 1;
+}
+
+
+.economy-statistic p:first-child {
+    font-size: calc(var(--index) * 0.53);
+    margin-bottom: calc(var(--index) * 0.17);
+}
+
+.economy-statistic h2 {
+    font-size: calc(var(--index) * 0.8);
+    margin-bottom: calc(var(--index) * 0.17);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    transition: font-size 0.3s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    line-height: 1.2;
+}
+
+.economy-statistic h2 span {
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.economy-statistic p:last-child {
+    color: #666;
+    font-size: calc(var(--index) * 0.4);
+    margin-bottom: calc(var(--index) * 0.4);
+}
+
+/* График */
+
+.statistics-section{
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: calc(var(--index) * 0.53);
+    padding: calc(var(--index) * 0.67);
+    font-weight: 500;
+    margin-bottom: calc(var(--index) * 0.55);
+    max-width: calc(var(--index) * 33.33);
+}
+
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    border-radius: calc(var(--index) * 0.53);
+    padding: calc(var(--index) * 0.4);
+    margin-left: 1%;
+    width: 100%;
+    max-width: calc(var(--index) * 33.33);
+}
+
+/*Управление графиком*/
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: calc(var(--index) * 0.27) 0;
+    margin-bottom: calc(var(--index) * 0.67);
+}
+
+/*Управление латами*/
+.period {
+    display: flex;
+    transition: transform .25s ease-in-out;
+}
+
+.period:hover {
+    transform: scale(1.05);
+}
+
+.period-btn {
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: calc(var(--index) * 0.27) calc(var(--index) * 0.4);
+    border: none;
+    cursor: pointer;
+    font-size: calc(var(--index) * 0.5);
+    border: solid rgba(0, 0, 0, 0.1) calc(var(--index) * 0.03);
+    transition: all .25s ease-in-out;
+}
+
+.period-btn:first-child {
+    border-radius: calc(var(--index) * 0.27) 0 0 calc(var(--index) * 0.27);
+
+
+}
+
+.period-btn:last-child {
+    border-radius: 0 calc(var(--index) * 0.27) calc(var(--index) * 0.27) 0;
+}
+
+
+.period-btn:hover { 
+    background-color: #ffc9c9;
+}
+
+.period-btn.period-active {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    transition: all .25s ease-in-out;
+}
+
+.period-btn.period-active:hover {
+    background-color: #FF5858;
+    filter: brightness(1.5);
+}
+
+/*Экспорт*/
+.export {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--index) * 0.33);
+}
+
+.export span {
+    font-size: calc(var(--index) * 0.6);
+}
+
+.export-buttons {
+    display: flex;
+    gap: calc(var(--index) * 0.27);
+}
+
+.export-btn {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--index) * 0.2);
+    padding: calc(var(--index) * 0.2) calc(var(--index) * 0.33);
+    border-radius: calc(var(--index) * 0.27);
+    cursor: pointer;
+    transition: opacity 0.3s;
+    color: #fff;
+}
+
+.export-btn:hover {
+    opacity: 0.8;
+}
+
+.export-btn.pdf {
+    background-color: var(--primary-color);
+}
+
+.export-btn.xlsx {
+    background-color: #009705;
+}
+
+.export-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.export-icon svg {
+    width: calc(var(--index) * 0.4);
+    height: calc(var(--index) * 0.4);
+}
+
+/* Средние значения */
+
+.wrapper {
+    display: flex;
+    align-items: flex-start;
+    gap: calc(var(--index) * 1);
+    position: relative;
+}
+
+.avg-values {
+    display: flex;
+    flex-direction: column;
+    min-width: calc(var(--index) * 8); /* Минимальная ширина для средних значений */
+    max-width: calc(var(--index) * 12); /* Максимальная ширина */
+    width: 25%; /* Занимает 25% от доступного пространства */
+}
+
+.avg-expenses,
+.avg-income {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: calc(var(--index) * 0.27);
+    border-radius: calc(var(--index) * 0.27);
+    margin-bottom: calc(var(--index) * 0.5);
+}
+
+.avg-expenses p,
+.avg-income p {
+    color: #666;
+    font-size: calc(var(--index) * 0.53);
+    margin-bottom: calc(var(--index) * 0.13);
+}
+
+.avg-expenses h2,
+.avg-income h2 {
+    font-size: calc(var(--index)*1.25);
+    font-weight: 500;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    transition: font-size 0.3s ease;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* Основной график*/
+.main-chart {
+    flex: 1;
+    min-width: 0; /* Позволяет графику сжиматься */
+    width: 75%; /* Занимает оставшиеся 75% пространства */
+}
+
+.chart-placeholder {
+    display: flex;
+    border-radius: calc(var(--index) * 0.27);
+    padding: calc(var(--index) * 0.5);
+    height: 100%;
+}
+
+.chart-placeholder canvas {
+    width: 100% ;
+    height: 100%;
+    max-height: calc(var(--index) * 15);
+}
+
+.chart-legend {
+    display: flex;
+    justify-content: center;
+    gap: calc(var(--index) * 0.67);
+    margin-top: calc(var(--index) * 0.5);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    font-size: calc(var(--index) * 0.43);
+}
+
+.legend-color {
+    width: calc(var(--index) * 0.53);
+    height: calc(var(--index) * 0.53);
+    border-radius: calc(var(--index) * 0.1);
+    margin-right: calc(var(--index) * 0.27);
+}
+
+.legend-color.expenses {
+    background-color: #F44336;
+}
+
+.legend-color.income {
+    background-color: #4CAF50;
+}
+
+/* Secondary Sections */
+.secondary-sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: calc(var(--index) * 0.5);
+}
+
+
+/* Transactions Section */
+.transactions {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: calc(var(--index) * 0.53);
+    padding: calc(var(--index) * 0.53);
+}
+
+.transactions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: calc(var(--index) * 0.5);
+}
+
+.transaction-date-header {
+    font-weight: 600;
+    color: #999;
+    font-size: 0.9em;
+}
+
+.transactions-header h2 {
+    color: #333;
+    font-size: calc(var(--index) * 0.53);
+}
+
+.transactions-date {
+    text-align: right;
+}
+
+.transactions-date p {
+    color: #333;
+    font-size: calc(var(--index) * 0.43);
+    font-weight: 500;
+}
+
+.transactions-date span {
+    color: #666;
+    font-size: calc(var(--index) * 0.37);
+}
+
+.transactions-list {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--index) * 0.4);
+    max-height: calc(var(--index) * 14); /* Можете подобрать высоту */
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: calc(var(--index) *.5); /* небольшой отступ для скроллбара */
+}
+
+.transaction-item {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--index) * 0.33);
+    padding: calc(var(--index) * 0.33);
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: calc(var(--index) * 0.27);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    transition: all ease .3s;
+    cursor: pointer;
+}
+
+.transaction-item:hover {
+    transform: translateY(calc(var(--index) * -0.07));
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, #fff5f5, #ffe5e5);
+    border-color: #FF5858;
+}
+
+.transaction-icon {
+    width: calc(var(--index) * 1.17);
+    height: calc(var(--index) * 1.17);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: calc(var(--index) * 0.2);
+}
+
+.transaction-icon.emoji-bg {
+    position: relative;
+    width: calc(var(--index) * 1.5);
+    height: calc(var(--index) * 1.5);
+    border-radius: calc(var(--index)*.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.transaction-icon.emoji-bg::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255, 100, 100, 0.6), rgba(255, 200, 150, 0.4));
+    backdrop-filter: blur(8px);
+    border-radius: calc(var(--index)*.4);
+    z-index: 0;
+}
+
+.transaction-icon .emoji {
+    position: relative;
+    font-size: calc(var(--index)* .8);
+}
+
+
+.transaction-info {
+    flex-grow: 1;
+}
+
+.transaction-name {
+    color: #333;
+    font-size: calc(var(--index) * 0.5);
+    font-weight: 600;
+    margin-bottom: calc(var(--index) * 0.07);
+}
+
+.transaction-category {
+    color: #666;
+    font-size: calc(var(--index) * 0.4);
+}
+
+.transaction-amount {
+    font-weight: 600;
+    font-size: calc(var(--index) * 0.5);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    max-width: 100px;
+    flex-shrink: 0;
+}
+
+.transaction-amount.negative {
+    color: #F44336;
+}
+
+.transaction-amount.positive {
+    color: #4CAF50;
+}
+
+.fin-health {
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to right, #FF8A5C, #FF5858);
+    border-radius: calc(var(--index) * 0.53);
+    padding: calc(var(--index) * 0.27) calc(var(--index) * 0.53);
+    max-width: calc(var(--index) * 18);
+    max-height: calc(var(--index) * 6.67);
+    cursor: pointer;
+    transition: .5s all ease-in-out ;
+}
+
+.fin-health:hover {
+    filter: brightness(1.15);
+    transform: translateY(calc(var(--index) * -0.17));
+}
+
+.fin-health a {
+    color: #fff;
+}
+
+.fin-heading {
+    display: flex;
+    align-items: center;
+    font-size: calc(var(--index) * 0.67);
+    gap: calc(var(--index) * 0.07);
+    margin-bottom: calc(var(--index) * 0.27);
+}
+
+.fin-heading h2 {
+    font-weight: 500;
+    margin: 0;
+    font-size: calc(var(--index) * 0.8);
+}
+
+.heading-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.heading-img svg {
+    width: calc(var(--index) * 0.8);
+    height: calc(var(--index) * 0.8);
+}
+
+.fin-rating {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: calc(var(--index) * 0.4);
+}
+
+.fin-chart {
+    flex-shrink: 0;
+    width: calc(var(--index) * 4.27);
+    height: calc(var(--index) * 4.27);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fin-chart svg, .fin-chart canvas {
+    width: 100%;
+    height: 100%;
+}
+
+.text-rating-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.text-rating-wrapper h1 {
+    letter-spacing: 5%;
+    margin: 0;
+    line-height: 1;
+    display: flex;
+    align-items: baseline;
+}
+
+.text-rating {
+    font-size: calc(var(--index) * 2.13);
+    line-height: 1;
+}
+
+.text-full-rating {
+    font-size: calc(var(--index) * 1.07);
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1;
+}
+
+.text-rating-wrapper h2 {
+    margin: calc(var(--index) * 0.13) 0 calc(var(--index) * 0.07);
+    font-weight: 500;
+    font-size: calc(var(--index) * 0.8);
+}
+
+.text-rating-wrapper p {
+    font-size: calc(var(--index) * 0.53);
+    margin: 0;
+    opacity: .85;
+}
+
+/* Стили для блока целей */
+.goals-section {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: calc(var(--index) * 0.53);
+    padding: calc(var(--index) * 0.53);
+    margin-top: 0;
+    max-height: calc(var(--index) * 10); 
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 5px; 
+    max-width: calc(var(--index) * 18);
+}
+
+.goals-header {
+    margin-bottom: calc(var(--index) * 0.4);
+}
+
+.goals-header h2 {
+    font-size: calc(var(--index) * 0.67);
+    font-weight: 500;
+}
+
+.goal-item {
+    background: white;
+    border-radius: calc(var(--index) * 0.27);
+    padding: calc(var(--index) * 0.4);
+    margin-bottom: calc(var(--index) * 0.33);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    transition: all .3s ease;
+}
+
+.goal-item:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, #fff5f5, #ffe5e5);
+    border-color: #FF5858;
+}
+
+.goal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: calc(var(--index) * 0.27);
+}
+
+.goal-title {
+    font-weight: 500;
+    font-size: calc(var(--index) * 0.5);
+    flex: 1;
+    text-transform: capitalize;
+}
+
+.goal-percentage {
+    font-weight: 600;
+    color: var(--primary-color);
+    font-size: calc(var(--index) * 0.47);
+}
+
+.goal-progress {
+    background: #EFEFEF;
+    border-radius: calc(var(--index) * 0.53);
+    height: calc(var(--index) * 0.4);
+    overflow: hidden;
+    position: relative;
+}
+
+.goal-amounts {
+    display: flex;
+    justify-content: space-between;
+    font-size: calc(var(--index) * 0.37);
+    color: #666;
+    margin-top: calc(var(--index) * 0.2);
+}
+
+/* Стили для фиксированного заголовка целей */
+.goals-section {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: calc(var(--index) * 0.53);
+    padding: calc(var(--index) * 0.53);
+    margin-top: calc(var(--index) * 0.53);
+    display: flex;
+    flex-direction: column;
+    height: calc(var(--index) * 7.5);
+}
+
+.goals-header {
+    margin-bottom: calc(var(--index) * 0.4);
+    flex-shrink: 0;
+}
+
+.goals-header h2 {
+    font-size: calc(var(--index) * 0.67);
+    font-weight: 500;
+}
+
+.goals-list {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 5px;
+}
+
+/* Стили для деталей в модальных окнах */
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: calc(var(--index) * 0.3) 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 500;
+    color: #666;
+    font-size: calc(var(--index) * 0.5);
+}
+
+.detail-value {
+    font-weight: 400;
+    color: #333;
+    font-size: calc(var(--index) * 0.5);
+    text-align: right;
+    flex: 1;
+    margin-left: calc(var(--index) * 0.5);
+}
+
+.transaction-details,
+.account-details,
+.goal-details {
+    margin: calc(var(--index) * 0.5) 0;
+}
+
+
+/* Стили для целей */
+.goal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: calc(var(--index) * 0.5) 0;
+    margin-bottom: calc(var(--index) * 0.5);
+}
+
+.goal-info {
+    flex: 1;
+}
+
+.goal-title {
+    font-size: calc(var(--index) * 0.8);
+    font-weight: 600;
+    margin-bottom: calc(var(--index) * 0.2);
+    letter-spacing: 0.5px;
+}
+
+.goal-amounts-large {
+    font-size: calc(var(--index) * 1);
+    font-weight: 700;
+    color: #FF5858;
+}
+
+.goal-progress-circle {
+    position: relative;
+    width: calc(var(--index) * 4);
+    height: calc(var(--index) * 4);
+    flex-shrink: 0;
+}
+
+.goal-progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: calc(var(--index) * 0.6);
+    font-weight: 700;
+    color: #FF5858;
+}
+
+
+
+/* Исправлен цвет счетов с зеленого на нейтральный */
+.account-amount {
+    font-weight: 700;
+    font-size: calc(var(--index) * 0.5);
+    color: #333; /* Изменено с #4CAF50 на #333 */
+    margin: 0;
+    margin-left: calc(var(--index) * 0.27);
+    flex-shrink: 0;
+}
+
+
+
+
+.second-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--index) * 0.5);
+}
+
+/* Улучшена адаптивность текста */
+.menu-capital h2,
+.income h2,
+.expenses h2,
+.economy-statistic h2,
+.avg-expenses h2,
+.avg-income h2 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    transition: font-size 0.3s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    line-height: 1.2;
+}
+
+/* Исправлен z-index для модальных окон */
+.modal {
+    z-index: 10000;
+}
+
+.modal-content {
+    z-index: 10001;
+}
+
+/* Кнопки действий */
+.modal-actions {
+    display: flex;
+    gap: calc(var(--index) * 0.3);
+    margin-top: calc(var(--index) * 0.5);
+}
+
+.btn-edit {
+    flex: 1;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: calc(var(--index) * 0.4);
+    border-radius: calc(var(--index) * 0.27);
+    cursor: pointer;
+    font-size: calc(var(--index) * 0.5);
+    transition: opacity 0.3s ease;
+}
+
+.btn-delete {
+    flex: 1;
+    background: #fff;
+    color: #ff5858;
+    border: 1px solid #ff5858;
+    padding: calc(var(--index) * 0.4);
+    border-radius: calc(var(--index) * 0.27);
+    cursor: pointer;
+    font-size: calc(var(--index) * 0.5);
+    transition: all 0.3s ease;
+}
+
+.btn-edit:hover {
+    opacity: 0.9;
+}
+
+.btn-delete:hover {
+    background: #ff5858;
+    color: #fff;
+}
+
+/* Детали */
+.transaction-details,
+.goal-details {
+    margin: calc(var(--index) * 0.5) 0;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: calc(var(--index) * 0.3) 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 500;
+    color: #666;
+    font-size: calc(var(--index) * 0.5);
+}
+
+.detail-value {
+    font-weight: 400;
+    color: #333;
+    font-size: calc(var(--index) * 0.5);
+    text-align: right;
+}
+
+/* Стили для модальных окон просмотра счетов */
+.account-header {
+    text-align: center;
+    padding: calc(var(--index) * 0.5) 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: calc(var(--index) * 0.5);
+}
+
+.account-emoji {
+    font-size: calc(var(--index) * 2);
+        background: linear-gradient(135deg, #FF8A5C, #FF5858);
+    margin-bottom: calc(var(--index) * 0.3);
+    width: calc(var(--index) * 3);
+    height: calc(var(--index) * 3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto calc(var(--index) * 0.3);
+}
+
+.account-emoji .emoji {
+    font-size: calc(var(--index) * 1.2);
+}
+
+.account-title {
+    font-size: calc(var(--index) * 0.8);
+    font-weight: 600;
+    margin-bottom: calc(var(--index) * 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.account-amount-large {
+    font-size: calc(var(--index) * 1.2);
+    font-weight: 700;
+}
+
+/* Улучшенный внешний вид списка счетов */
+.menu-account {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(135deg, #ffffff, #f8f9fa);
+    margin-top: calc(var(--index) * 0.33);
+    border-radius: calc(var(--index) * 0.4);
+    width: calc(var(--index) * 10.25);
+    height: calc(var(--index) * 2);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    padding: 0 calc(var(--index) * 0.27);
+}
+
+.menu-account:hover {
+    transform: translateY(calc(var(--index) * -0.07));
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    background: linear-gradient(135deg, #fff5f5, #ffe5e5);
+    border-color: #FF5858;
+}
+
+.menu-account-circle {
+    width: calc(var(--index) * 1.4);
+    height: calc(var(--index) * 1.4);
+    background: linear-gradient(135deg, #FF8A5C, #FF5858);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    margin-right: calc(var(--index) * 0.4);
+    box-shadow: 0 2px 4px rgba(255, 88, 88, 0.3);
+}
+
+.menu-account-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.menu-account-img span {
+    font-size: calc(var(--index) * 0.8);
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+}
+
+.menu-account-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    flex: 1;
+}
+
+.account-name {
+    font-weight: 600;
+    font-size: calc(var(--index) * 0.5);
+    color: #333;
+    margin: 0;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.account-amount {
+    font-weight: 700;
+    font-size: calc(var(--index) * 0.5);
+    margin: 0;
+    margin-left: calc(var(--index) * 0.27);
+    flex-shrink: 0;
+}
+
+/* Стили для модального окна просмотра транзакции */
+.view-modal {
+    max-width: calc(var(--index) * 18);
+}
+
+.transaction-header {
+    text-align: center;
+    padding: calc(var(--index) * 0.5) 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: calc(var(--index) * 0.5);
+}
+
+.transaction-emoji {
+    font-size: calc(var(--index) * 2);
+    margin-bottom: calc(var(--index) * 0.3);
+    width: calc(var(--index) * 3);
+    height: calc(var(--index) * 3);
+    background: linear-gradient(135deg, #FF8A5C, #FF5858);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto calc(var(--index) * 0.3);
+}
+
+.transaction-emoji .emoji {
+    font-size: calc(var(--index) * 1.2);
+}
+
+.transaction-title {
+    font-size: calc(var(--index) * 0.8);
+    font-weight: 600;
+    margin-bottom: calc(var(--index) * 0.2);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.transaction-amount-large {
+    font-size: calc(var(--index) * 1.2);
+    font-weight: 700;
+    color: #333;
+}
+
+.transaction-amount-large.income {
+    color: #4CAF50;
+}
+
+.transaction-amount-large.expense {
+    color: #FF5858;
+}
+
+/* Заголовок для деталей */
+.transaction-details h3 {
+    font-size: calc(var(--index) * 0.6);
+    font-weight: 600;
+    margin-bottom: calc(var(--index) * 0.4);
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Детали транзакций */
+.transaction-details {
+    margin: calc(var(--index) * 0.5) 0;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: calc(var(--index) * 0.3) 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 500;
+    color: #666;
+    font-size: calc(var(--index) * 0.5);
+}
+
+.detail-value {
+    font-weight: 400;
+    color: #333;
+    font-size: calc(var(--index) * 0.5);
+    text-align: right;
+}
+
+/* Кнопки действий в модальном окне */
+.modal-actions {
+    display: flex;
+    gap: calc(var(--index) * 0.3);
+    margin-top: calc(var(--index) * 0.5);
+}
+
+.btn-edit {
+    flex: 1;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: calc(var(--index) * 0.4);
+    border-radius: calc(var(--index) * 0.27);
+    cursor: pointer;
+    font-size: calc(var(--index) * 0.5);
+    transition: opacity 0.3s ease;
+}
+
+.btn-delete {
+    flex: 1;
+    background: #fff;
+    color: #ff5858;
+    border: 1px solid #ff5858;
+    padding: calc(var(--index) * 0.4);
+    border-radius: calc(var(--index) * 0.27);
+    cursor: pointer;
+    font-size: calc(var(--index) * 0.5);
+    transition: all 0.3s ease;
+}
+
+.btn-edit:hover {
+    opacity: 0.9;
+}
+
+.btn-delete:hover {
+    background: #ff5858;
+    color: #fff;
+}
+
+/* Стили для модального окна действий в виде сетки */
+.actions-modal-horizontal {
+    max-width: calc(var(--index) * 25);
+    padding: calc(var(--index) * 1);
+    background: #FFFFFF;
+    border-radius: calc(var(--index) * 0.8);
+    box-shadow: 0 calc(var(--index) * 0.2) calc(var(--index) * 0.4) rgba(0, 0, 0, 0.1);
+}
+
+.actions-modal-horizontal h2 {
+    font-size: calc(var(--index) * 0.6);
+    font-weight: 400;
+    color: #333;
+    margin-bottom: calc(var(--index) * 0.8);
+    text-align: center;
+}
+
+.actions-horizontal {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: calc(var(--index) * 1.5);
+    width: 100%;
+    padding: calc(var(--index) * 0.5) calc(var(--index) * 1);
+}
+
+.action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: calc(var(--index) * 0.3);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    min-width: calc(var(--index) * 4);
+    background-color: #FFFFFF;
+}
+
+.action-icon {
+    width: calc(var(--index) * 2);
+    height: calc(var(--index) * 2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #F0F0F0;
+    border: var(--primary-color) calc(var(--index)*.075) solid;
+    border-radius: calc(var(--index)*.5);
+    transition: all ease-in-out .25s;
+}
+
+.action-icon:hover {
+    background-color: #ffc9c9;
+    transform: translateY(calc(var(--index)*-.1));
+}
+
+.action-icon svg {
+    width: 60%;
+    height: 60%;
+}
+
+.action-label {
+    font-size: calc(var(--index) * 0.45);
+    font-weight: 400;
+    color: #666;
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* Подмодальное окно для очистки данных */
+#clearDataModal .modal-content {
+    max-width: calc(var(--index) * 18);
+    padding: calc(var(--index) * 1);
+    background: white;
+    border-radius: calc(var(--index) * 0.5);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+#clearDataModal h2 {
+    font-size: calc(var(--index) * 0.7);
+    margin-bottom: calc(var(--index) * 0.5);
+    text-align: center;
+    color: #333;
+}
+
+.section-description {
+    font-size: calc(var(--index) * 0.45);
+    color: #666;
+    margin-bottom: calc(var(--index) * 0.7);
+    text-align: center;
+}
+
+.clear-options {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--index) * 0.3);
+    margin-bottom: calc(var(--index) * 0.7);
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: calc(var(--index) * 0.3);
+    font-size: calc(var(--index) * 0.5);
+    color: #333;
+    padding: calc(var(--index) * 0.2);
+    border-radius: calc(var(--index) * 0.3);
+    transition: background 0.2s;
+}
+
+.checkbox-label:hover {
+    background: #f8f8f8;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: calc(var(--index) * 0.7);
+    height: calc(var(--index) * 0.7);
+    margin: 0;
+}
+
+#clearSelectedData {
+    display: flex;
+    background: #FF5858;
+    color: white;
+    padding: calc(var(--index) * 0.5);
+    border-radius: calc(var(--index) * 0.4);
+    text-align: center;
+    cursor: pointer;
+    font-size: calc(var(--index) * 0.55);
+    transition: background 0.3s;
+    max-width: 90%;
+    align-items: center;
+    justify-content: center;
+}
+
+#clearSelectedData:hover {
+    background: #e03e3e;
+}
+
+/* Account Menu Styles */
+.account-menu-btn {
+    position: relative;
+}
+
+.account-menu {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 10px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    min-width: 200px;
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.account-menu.active {
+    display: block;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.account-menu-item {
+    display: block;
+    padding: 12px 16px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.account-menu-item:last-child {
+    border-bottom: none;
+}
+
+.account-menu-item:hover {
+    background: #f5f5f5;
+}
+
+.account-menu-item.logout {
+    color: #FF5858;
+    background: #fff5f5;
+}
+
+.account-menu-item.logout:hover {
+    background: #ffe8e8;
+}

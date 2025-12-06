@@ -1,0 +1,681 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация - CtrlMoney</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #FF5858;
+            --accent-purple: #667eea;
+            --accent-dark-purple: #764ba2;
+            --accent-pink: #f093fb;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --gradient-purple-pink: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gradient-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .register-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 500px;
+            padding: 50px 35px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.6s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 40px;
+            margin-bottom: 12px;
+            display: inline-block;
+        }
+
+        .register-header h1 {
+            font-size: 32px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .register-header p {
+            color: #999;
+            font-size: 15px;
+            font-weight: 500;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .form-row .form-group {
+            margin-bottom: 0;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Inter', inherit;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--accent-purple);
+            background: white;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: #ccc;
+        }
+
+        .error-message {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.2);
+        }
+
+        .error-list {
+            list-style: none;
+        }
+
+        .error-list li {
+            padding: 3px 0;
+        }
+
+        .error-list li:before {
+            content: "⚠ ";
+            margin-right: 8px;
+        }
+
+        .captcha-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 16px;
+            padding: 18px;
+            margin: 20px 0;
+        }
+
+        .captcha-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .puzzle-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .slot {
+            height: 80px;
+            background: rgba(255, 255, 255, 0.7);
+            border: 3px dashed rgba(102, 126, 234, 0.4);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: grab;
+        }
+
+        .slot:active {
+            cursor: grabbing;
+        }
+
+        .slot.has-image {
+            border-color: rgba(102, 126, 234, 0.6);
+            background: rgba(102, 126, 234, 0.05);
+            border-style: solid;
+        }
+
+        .slot.correct {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.15);
+            animation: pulse 0.5s ease-in-out;
+        }
+
+        .slot.incorrect {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .slot-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slot-number {
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: bold;
+            z-index: 2;
+        }
+
+        .slot-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .slot-placeholder {
+            font-size: 1.8rem;
+            color: rgba(102, 126, 234, 0.3);
+        }
+
+        .pieces {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+        }
+
+        .piece {
+            height: 70px;
+            cursor: grab;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: 2px solid transparent;
+            font-weight: bold;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .piece:hover:not(.used) {
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .piece:active:not(.used) {
+            cursor: grabbing;
+        }
+
+        .piece.used {
+            opacity: 0.2;
+            pointer-events: none;
+            transform: scale(0.95);
+            box-shadow: none;
+        }
+
+        .piece img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 16px;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'Inter', inherit;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .submit-btn:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .auth-link {
+            text-align: center;
+            margin-top: 18px;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .auth-link a {
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .auth-link a:hover {
+            opacity: 0.8;
+        }
+
+        .password-help {
+            font-size: 10px;
+            color: #999;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .captcha-status {
+            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .captcha-status.pending {
+            background: rgba(245, 158, 11, 0.1);
+            color: #d97706;
+            border: 1px solid rgba(217, 119, 6, 0.2);
+        }
+
+        .captcha-status.success {
+            background: rgba(16, 185, 129, 0.1);
+            color: #059669;
+            border: 1px solid rgba(5, 150, 105, 0.2);
+        }
+
+        .captcha-status.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .register-container {
+                padding: 30px 20px;
+            }
+
+            .register-header h1 {
+                font-size: 28px;
+            }
+
+            .logo {
+                font-size: 32px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .pieces {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <div class="register-header">
+            <div class="logo">💰</div>
+            <h1>CtrlMoney</h1>
+            <p>Создайте аккаунт</p>
+        </div>
+
+        {% if errors %}
+            <div class="error-message">
+                <ul class="error-list">
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <form method="POST" id="registerForm">
+            {% csrf_token %}
+            
+            <!-- Основные данные -->
+            <div class="form-group">
+                <label for="username">Имя пользователя</label>
+                <input type="text" id="username" name="username" placeholder="user123" required value="{{ username }}">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="example@mail.com" required value="{{ email }}">
+            </div>
+
+            <!-- ФИО -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="last_name">Фамилия</label>
+                    <input type="text" id="last_name" name="last_name" placeholder="Иванов" required value="{{ last_name }}">
+                </div>
+                <div class="form-group">
+                    <label for="first_name">Имя</label>
+                    <input type="text" id="first_name" name="first_name" placeholder="Иван" required value="{{ first_name }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="patronymic">Отчество (опционально)</label>
+                <input type="text" id="patronymic" name="patronymic" placeholder="Иванович" value="{{ patronymic }}">
+            </div>
+
+            <!-- Пароль -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="password">Пароль</label>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    <div class="password-help">Минимум 6 символов</div>
+                </div>
+                <div class="form-group">
+                    <label for="password_confirm">Подтвердите пароль</label>
+                    <input type="password" id="password_confirm" name="password_confirm" placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <!-- Капча-пазл -->
+            <div class="captcha-section">
+                <div class="captcha-title">
+                    🧩 Соберите пазл по порядку 1→2→3→4
+                </div>
+
+                <div class="puzzle-grid">
+                    <div class="slot" id="slot-0" data-slot="1">
+                        <div class="slot-content">
+                            <div class="slot-number">1</div>
+                            <div class="slot-placeholder">?</div>
+                        </div>
+                    </div>
+                    <div class="slot" id="slot-1" data-slot="2">
+                        <div class="slot-content">
+                            <div class="slot-number">2</div>
+                            <div class="slot-placeholder">?</div>
+                        </div>
+                    </div>
+                    <div class="slot" id="slot-2" data-slot="3">
+                        <div class="slot-content">
+                            <div class="slot-number">3</div>
+                            <div class="slot-placeholder">?</div>
+                        </div>
+                    </div>
+                    <div class="slot" id="slot-3" data-slot="4">
+                        <div class="slot-content">
+                            <div class="slot-number">4</div>
+                            <div class="slot-placeholder">?</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pieces" id="piecesContainer">
+                    {% for piece in captcha_pieces %}
+                        <div class="piece" draggable="true" data-piece="{{ piece }}">
+                            <img src="{% static 'img/' %}{{ piece }}.png" alt="Captcha piece {{ piece }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="captcha-status pending" id="captchaStatus">
+                    Проверьте, что порядок правильный
+                </div>
+            </div>
+
+            <input type="hidden" name="captcha_passed" id="captcha_passed" value="0">
+
+            <button type="submit" class="submit-btn" id="submitBtn">Зарегистрироваться</button>
+        </form>
+
+        <div class="auth-link">
+            Уже есть аккаунт? <a href="{% url 'main:login' %}">Войти</a>
+        </div>
+    </div>
+
+    <script>
+        const correctOrder = [1, 2, 3, 4];
+        let placedPieces = Array(4).fill(null);
+
+        // Функция для перетаскивания элементов
+        document.querySelectorAll('.piece').forEach(piece => {
+            piece.addEventListener('dragstart', function(e) {
+                e.dataTransfer.effectAllowed = 'move';
+                e.dataTransfer.setData('text/plain', this.dataset.piece);
+            });
+
+            piece.addEventListener('dragend', function(e) {
+                if (e.dataTransfer.dropEffect !== 'move') {
+                    // Если элемент не был успешно перемещен
+                }
+            });
+        });
+
+        // Функция для обработки зон сброса
+        document.querySelectorAll('.slot').forEach(slot => {
+            slot.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                this.style.backgroundColor = 'rgba(102, 126, 234, 0.15)';
+            });
+            
+            slot.addEventListener('dragleave', function() {
+                this.style.backgroundColor = '';
+            });
+            
+            slot.addEventListener('drop', function(e) {
+                e.preventDefault();
+                this.style.backgroundColor = '';
+                
+                const pieceNumber = parseInt(e.dataTransfer.getData('text/plain'));
+                const slotIndex = parseInt(this.id.split('-')[1]);
+                
+                // Если слот уже занят, не делаем ничего
+                if (placedPieces[slotIndex] !== null) {
+                    return;
+                }
+                
+                // Добавляем содержимое в слот
+                const originalPiece = document.querySelector(`.piece[data-piece="${pieceNumber}"]`);
+                
+                const slotContent = this.querySelector('.slot-content');
+                slotContent.innerHTML = `<div class="slot-number">${slotIndex + 1}</div><img src="/static/img/${pieceNumber}.png" alt="Piece ${pieceNumber}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">`;
+                
+                this.classList.add('has-image');
+                originalPiece.classList.add('used');
+                
+                // Сохраняем информацию о размещенном элементе
+                placedPieces[slotIndex] = pieceNumber;
+                
+                // Проверяем правильность сборки
+                checkCaptcha();
+            });
+
+            // Двойной клик по слоту для очистки
+            slot.addEventListener('dblclick', function() {
+                const slotIndex = parseInt(this.id.split('-')[1]);
+                if (placedPieces[slotIndex] !== null) {
+                    const piece = document.querySelector(`.piece[data-piece="${placedPieces[slotIndex]}"]`);
+                    piece.classList.remove('used');
+                    placedPieces[slotIndex] = null;
+                    
+                    const slotContent = this.querySelector('.slot-content');
+                    slotContent.innerHTML = `<div class="slot-number">${slotIndex + 1}</div><div class="slot-placeholder">?</div>`;
+                    this.classList.remove('has-image', 'correct', 'incorrect');
+                    document.getElementById('captcha_passed').value = '0';
+                    updateCaptchaStatus();
+                }
+            });
+        });
+
+        // Функция проверки капчи
+        function checkCaptcha() {
+            // Проверяем, все ли слоты заполнены
+            const allFilled = placedPieces.every(piece => piece !== null);
+            
+            if (allFilled) {
+                // Проверяем правильность порядка
+                const isCorrect = placedPieces.every((piece, index) => piece === correctOrder[index]);
+                
+                document.querySelectorAll('.slot').forEach(slot => {
+                    slot.classList.remove('correct', 'incorrect');
+                });
+                
+                if (isCorrect) {
+                    document.getElementById('captcha_passed').value = '1';
+                    document.querySelectorAll('.slot').forEach(slot => {
+                        slot.classList.add('correct');
+                    });
+                    updateCaptchaStatus();
+                } else {
+                    document.getElementById('captcha_passed').value = '0';
+                    document.querySelectorAll('.slot').forEach(slot => {
+                        slot.classList.add('incorrect');
+                    });
+                    updateCaptchaStatus();
+                }
+            } else {
+                document.getElementById('captcha_passed').value = '0';
+                updateCaptchaStatus();
+            }
+        }
+
+        function updateCaptchaStatus() {
+            const status = document.getElementById('captchaStatus');
+            const captchaPassed = document.getElementById('captcha_passed').value === '1';
+            const allFilled = placedPieces.every(piece => piece !== null);
+
+            status.classList.remove('pending', 'success', 'error');
+            
+            if (captchaPassed) {
+                status.classList.add('success');
+                status.textContent = '✓ Капча пройдена!';
+            } else if (allFilled) {
+                status.classList.add('error');
+                status.textContent = '✗ Неверный порядок, попробуйте ещё раз';
+            } else {
+                status.classList.add('pending');
+                status.textContent = 'Разместите все элементы по порядку';
+            }
+        }
+
+        // Запретить отправку формы, если капча не пройдена
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            if (document.getElementById('captcha_passed').value !== '1') {
+                e.preventDefault();
+                updateCaptchaStatus();
+                const status = document.getElementById('captchaStatus');
+                status.classList.remove('pending', 'success');
+                status.classList.add('error');
+                status.textContent = '✗ Сначала пройдите проверку капчи!';
+            }
+        });
+
+        // Инициализация статуса
+        updateCaptchaStatus();
+    </script>
+</body>
+</html>
