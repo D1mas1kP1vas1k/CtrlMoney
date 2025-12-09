@@ -4,6 +4,7 @@ from django.core.validators import MinValueValidator
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from decimal import Decimal
+from django.utils import timezone
 
 
 class Account(models.Model):
@@ -247,6 +248,10 @@ class UserProfile(models.Model):
     first_name = models.CharField(max_length=100, verbose_name='Имя')
     last_name = models.CharField(max_length=100, verbose_name='Фамилия')
     patronymic = models.CharField(max_length=100, blank=True, verbose_name='Отчество')
+    # Поля для блокировки аккаунта
+    is_blocked = models.BooleanField(default=False, verbose_name='Аккаунт заблокирован')
+    failed_login_attempts = models.IntegerField(default=0, verbose_name='Неудачные попытки входа')
+    blocked_at = models.DateTimeField(null=True, blank=True, verbose_name='Дата блокировки')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
     
@@ -267,6 +272,24 @@ class UserProfile(models.Model):
         if self.patronymic:
             fio += f' {self.patronymic}'
         return fio
+
+    def save(self, *args, **kwargs):
+        """Защита: нельзя блокировать суперюзера.
+
+        Если профиль относится к суперюзеру, гарантируем что аккаунт
+        не будет заблокирован и счетчик попыток обнулён.
+        """
+        try:
+            if self.user and self.user.is_superuser:
+                # всегда разблокировать суперюзера
+                self.is_blocked = False
+                self.failed_login_attempts = 0
+                self.blocked_at = None
+        except Exception:
+            # на случай если связь с пользователем не установлена
+            pass
+
+        return super().save(*args, **kwargs)
 
 
 # Сигнал для автоматического создания профиля пользователя

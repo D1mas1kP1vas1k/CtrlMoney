@@ -28,14 +28,14 @@
                     <span>Главная</span>
                 </a>
                     {% if user.is_superuser %}
-                    <a href="{% url 'main:emulator' %}" class="toggle-option">
+                    <a href="{% url 'admin:index' %}" class="toggle-option">
                         <div class="toggle-icon">
                             <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M16 2C8.27 2 2 8.27 2 16s6.27 14 14 14 14-6.27 14-14S23.73 2 16 2zm0 26c-6.63 0-12-5.37-12-12S9.37 4 16 4s12 5.37 12 12-5.37 12-12 12z" stroke="#FF5858" stroke-width="2" fill="none"/>
                                 <path d="M14.5 11h3v10h-3z" stroke="#FF5858" stroke-width="2" fill="none"/>
                             </svg>
                         </div>
-                        <span>Эмулятор</span>
+                        <span>Админ-панель</span>
                     </a>
                     {% endif %}
                 

@@ -3,10 +3,13 @@ from django.utils.html import format_html
 from django.urls import path
 from django.shortcuts import render
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.models import User
+from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_http_methods
 from django import forms
 from django.db import connection
+from django.utils import timezone
 import json
 import requests
 from .models import Account, Transaction, Goal, BudgetCategory, UserProfile
@@ -403,19 +406,24 @@ class BudgetCategoryAdmin(ReadOnlyAdminMixin, admin.ModelAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('get_full_name_display', 'get_user_display', 'created_at')
-    list_filter = ('created_at', 'user')
+    list_display = ('get_full_name_display', 'get_user_display', 'is_blocked', 'failed_login_attempts', 'created_at')
+    list_filter = ('created_at', 'user', 'is_blocked')
     search_fields = ('first_name', 'last_name', 'patronymic', 'user__username')
-    readonly_fields = ('created_at', 'updated_at', 'user')
+    readonly_fields = ('created_at', 'updated_at', 'user', 'failed_login_attempts', 'blocked_at')
     fieldsets = (
         ('Основная информация', {
             'fields': ('user', 'first_name', 'last_name', 'patronymic')
+        }),
+        ('Безопасность', {
+            'fields': ('is_blocked', 'blocked_at', 'failed_login_attempts'),
+            'description': 'Управление блокировкой аккаунта'
         }),
         ('Временные метки', {
             'fields': ('created_at', 'updated_at'),
             'classes': ('collapse',)
         }),
     )
+    actions = ['block_users', 'unblock_users', 'reset_login_attempts']
     
     def get_full_name_display(self, obj):
         return obj.full_name
@@ -425,6 +433,31 @@ class UserProfileAdmin(admin.ModelAdmin):
         return obj.user.username
     get_user_display.short_description = 'Пользователь'
     
+    def block_users(self, request, queryset):
+        """Действие для блокировки выбранных пользователей"""
+        total = queryset.count()
+        # Не блокируем суперюзеров
+        to_block = queryset.exclude(user__is_superuser=True)
+        updated = to_block.update(is_blocked=True, blocked_at=timezone.now())
+        skipped = total - updated
+        msg = f'Заблокировано пользователей: {updated}'
+        if skipped:
+            msg += f'; пропущено суперюзеров: {skipped}'
+        self.message_user(request, msg)
+    block_users.short_description = 'Заблокировать выбранных пользователей'
+    
+    def unblock_users(self, request, queryset):
+        """Действие для разблокировки выбранных пользователей"""
+        updated = queryset.update(is_blocked=False, blocked_at=None, failed_login_attempts=0)
+        self.message_user(request, f'Разблокировано пользователей: {updated}')
+    unblock_users.short_description = 'Разблокировать выбранных пользователей'
+    
+    def reset_login_attempts(self, request, queryset):
+        """Действие для сброса счетчика неудачных попыток входа"""
+        updated = queryset.update(failed_login_attempts=0)
+        self.message_user(request, f'Сброшен счетчик попыток для пользователей: {updated}')
+    reset_login_attempts.short_description = 'Сбросить счетчик неудачных попыток входа'
+    
     def has_add_permission(self, request):
         """Профили создаются автоматически при регистрации"""
         return False
@@ -433,4 +466,115 @@ class UserProfileAdmin(admin.ModelAdmin):
         """Нельзя удалять профили отдельно"""
         return False
 
+    def get_readonly_fields(self, request, obj=None):
+        """Делаем поле is_blocked только для чтения при редактировании суперюзера"""
+        ro = list(self.readonly_fields)
+        if obj and obj.user and obj.user.is_superuser:
+            # админ не сможет вручную пометить суперюзера как заблокированного
+            ro.append('is_blocked')
+        return tuple(ro)
+
+
+# === INLINE ДЛЯ ПРОФИЛЯ В ЮЗЕРАХ ===
+
+class UserProfileInline(admin.StackedInline):
+    """Inline для редактирования профиля пользователя прямо из страницы User"""
+    model = UserProfile
+    fields = ('first_name', 'last_name', 'patronymic', 'is_blocked', 'failed_login_attempts', 'blocked_at')
+    readonly_fields = ('failed_login_attempts', 'blocked_at')
+    extra = 0
+    
+    def get_readonly_fields(self, request, obj=None):
+        """Защита: поле is_blocked только для чтения для суперюзеров"""
+        ro = list(self.readonly_fields)
+        # obj здесь - это User (parent из CustomUserAdmin)
+        if obj and hasattr(obj, 'is_superuser') and obj.is_superuser:
+            ro.append('is_blocked')
+        return tuple(ro)
+
+
+# === КАСТОМНЫЙ USERADMIN С ПРОФИЛЕМ И БЛОКИРОВКОЙ ===
+
+class CustomUserAdmin(DjangoUserAdmin):
+    """Расширенный UserAdmin с интеграцией профиля и статуса блокировки"""
+    # Добавляем inline для профиля
+    inlines = [UserProfileInline]
+    
+    # Расширяем список отображаемых полей
+    list_display = (
+        'username', 
+        'email', 
+        'first_name', 
+        'last_name', 
+        'get_is_blocked_display',
+        'is_staff',
+        'is_superuser',
+        'last_login'
+    )
+    
+    # Добавляем фильтры для блокировки и суперюзеров
+    list_filter = DjangoUserAdmin.list_filter + ('is_superuser', 'is_staff')
+    
+    # Больше информации в поиске
+    search_fields = ('username', 'email', 'first_name', 'last_name')
+    
+    # Расширяем fieldsets для отображения информации о блокировке
+    fieldsets = DjangoUserAdmin.fieldsets + (
+        ('Статус блокировки', {
+            'fields': ('get_is_blocked_status',),
+            'description': 'Информация о статусе блокировки аккаунта (управляется через профиль)',
+            'classes': ('collapse',)
+        }),
+    )
+    
+    def get_is_blocked_display(self, obj):
+        """Показать статус блокировки в списке пользователей"""
+        try:
+            profile = obj.profile
+            if profile.is_blocked:
+                return format_html(
+                    '<span style="color: red; font-weight: bold;">🔒 Заблокирован</span>'
+                )
+            else:
+                return format_html(
+                    '<span style="color: green; font-weight: bold;">✓ Активен</span>'
+                )
+        except UserProfile.DoesNotExist:
+            return '-'
+    get_is_blocked_display.short_description = 'Статус блокировки'
+    
+    def get_is_blocked_status(self, obj):
+        """Показать детальный статус блокировки на странице редактирования"""
+        try:
+            profile = obj.profile
+            if profile.is_blocked:
+                return format_html(
+                    '<div style="padding: 10px; background-color: #fee; border: 1px solid #fcc; border-radius: 4px;">'
+                    '<strong style="color: red;">🔒 Аккаунт заблокирован</strong><br>'
+                    'Дата блокировки: {}<br>'
+                    'Неудачных попыток: {}'
+                    '</div>',
+                    profile.blocked_at.strftime('%d.%m.%Y %H:%M:%S') if profile.blocked_at else 'N/A',
+                    profile.failed_login_attempts
+                )
+            else:
+                return format_html(
+                    '<div style="padding: 10px; background-color: #efe; border: 1px solid #cfc; border-radius: 4px;">'
+                    '<strong style="color: green;">✓ Аккаунт активен</strong>'
+                    '</div>'
+                )
+        except UserProfile.DoesNotExist:
+            return 'Профиль не найден'
+    get_is_blocked_status.short_description = 'Детальный статус'
+    
+    def get_readonly_fields(self, request, obj=None):
+        """Динамические readonly поля"""
+        ro = list(super().get_readonly_fields(request, obj) or [])
+        ro.append('get_is_blocked_status')
+        return tuple(ro)
+
+
+# Заменяем встроенный UserAdmin на наш кастомный
+admin.site.unregister(User)
+admin.site.register(User, CustomUserAdmin)
 

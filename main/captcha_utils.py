@@ -14,6 +14,14 @@ def generate_captcha_sequence():
     random.shuffle(pieces)
     return pieces
 
+ 
+def get_captcha_pieces():
+    """
+    Получить перемешанные номера пазлов для отображения в шаблоне.
+    Возвращает список [1, 2, 3, 4] в случайном порядке.
+    """
+    return generate_captcha_sequence()
+
 
 def verify_captcha_answer(placed_pieces):
     """

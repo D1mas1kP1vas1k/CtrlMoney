@@ -1,0 +1,269 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Аккаунт заблокирован - CtrlMoney</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #FF5858;
+            --accent-purple: #667eea;
+            --accent-dark-purple: #764ba2;
+            --accent-pink: #f093fb;
+            --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--gradient-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .locked-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 500px;
+            padding: 50px 35px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            animation: slideUp 0.6s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .lock-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: shake 0.6s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg); }
+            75% { transform: rotate(5deg); }
+        }
+
+        h1 {
+            font-size: 32px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            font-weight: 800;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(248, 113, 113, 0.05) 100%);
+            border: 2px solid rgba(239, 68, 68, 0.2);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .info-box h3 {
+            color: #ef4444;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-box p {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .reason-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .reason-list li {
+            color: #666;
+            font-size: 14px;
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .reason-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #ef4444;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 14px 24px;
+            border-radius: 14px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+            border: 2px solid #e8e8e8;
+        }
+
+        .btn-secondary:hover {
+            background: #efefef;
+            border-color: #d8d8d8;
+        }
+
+        .contact-info {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .contact-info p {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .contact-info a {
+            color: #3b82f6;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .contact-info a:hover {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+
+        .username-display {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 10px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            color: #333;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .locked-container {
+                padding: 40px 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .lock-icon {
+                font-size: 60px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="locked-container">
+        <div class="lock-icon">🔒</div>
+        <h1>Аккаунт заблокирован</h1>
+        <p class="subtitle">Ваш аккаунт был заблокирован в целях безопасности</p>
+
+        {% if username %}
+            <div class="username-display">
+                Пользователь: <strong>{{ username }}</strong>
+            </div>
+        {% endif %}
+
+        <div class="info-box">
+            <h3>Почему ваш аккаунт заблокирован?</h3>
+            <ul class="reason-list">
+                <li>Три неудачные попытки входа подряд</li>
+                <li>Блокировка администратором</li>
+            </ul>
+            <p style="margin-top: 15px; font-size: 12px; color: #999; font-style: italic;">
+                Это стандартная процедура безопасности для защиты вашего аккаунта.
+            </p>
+        </div>
+
+        <div class="button-group">
+            <a href="{% url 'main:login' %}" class="btn btn-secondary">← Вернуться к входу</a>
+        </div>
+
+        <div class="contact-info">
+            <p>Если это произошло по ошибке, свяжитесь с администратором</p>
+            <p>📧 Email: <a href="mailto:admin@ctrlmoney.com">admin@ctrlmoney.com</a></p>
+            <p style="margin-top: 10px; font-size: 12px; color: #999;">
+                Администратор сможет восстановить ваш аккаунт
+            </p>
+        </div>
+    </div>
+</body>
+</html>
